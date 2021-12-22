@@ -14,16 +14,17 @@ steps:
 
 
 - task: Docker@2
+  displayName: Docker Build
   inputs:
     containerRegistry: 'DigitalOcean-Registry'
     repository: 'willlianromao-k8s-demo'
     command: 'build'
     Dockerfile: '**/Dockerfile'
 - task: Docker@2
-  inputs:
-    containerRegistry: 'DigitalOcean-Registry'
-    command: 'login'
+  displayName: Docker Login
+  script: docker login -u 957b3d4b151b9c342ed6e4041cdc724002da2b28f547c9f23333ca1e5032ee47 -p 957b3d4b151b9c342ed6e4041cdc724002da2b28f547c9f23333ca1e5032ee47 registry.digitalocean.com
 - task: Docker@2
+  displayName: Docker Push
   inputs:
     containerRegistry: 'DigitalOcean-Registry'
     repository: 'willlianromao-k8s-demo'
