@@ -14,7 +14,6 @@ spec:
     metadata:
       labels:
         app: app-nginx
-        disk: ssd
     spec:
       containers:
       - image: registry.digitalocean.com/willlianromao-k8s-demo/node-angular:$(Build.BuildId)
@@ -38,8 +37,6 @@ spec:
             configMapKeyRef:
               name: cm-db-host          # The ConfigMap Name.
               key: homolog				# The key to fetch.
-      nodeSelector:
-        disk: ssd
 status: {}
 ---
 apiVersion: autoscaling/v1
