@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-nginx
+  name: app-nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: app-nginx
+        disk: ssd
+    spec:
+      containers:
+      - image: registry.digitalocean.com/willlianromao-k8s-demo/node-angular:$(Build.BuildId)
+        name: nginx
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        resources: 
+          limits:
+            cpu: "800m"
+            memory: "1Gi"
+          requests:
+            cpu: "200m"
+            memory: "200Mi"
+        env:
+         - name: DB_HOST					# environment variable name
+           valueFrom:
+            configMapKeyRef:
+              name: cm-db-host          # The ConfigMap Name.
+              key: homolog				# The key to fetch.
+      nodeSelector:
+        disk: ssd
+status: {}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: app-nginx
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-nginx
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-nginx
+  name: app-nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: app-nginx
+  type: LoadBalancer
+status:
+  loadBalancer: {}
