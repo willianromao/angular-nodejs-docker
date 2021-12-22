@@ -12,6 +12,13 @@ pool:
 
 steps:
 
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'DigitalOcean-Registry'
+    repository: 'willlianromao-k8s-demo'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
 - task: Docker@2
   inputs:
     containerRegistry: 'DigitalOcean-Registry'
@@ -20,5 +27,4 @@ steps:
   inputs:
     containerRegistry: 'DigitalOcean-Registry'
     repository: 'willlianromao-k8s-demo'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    command: 'push'
