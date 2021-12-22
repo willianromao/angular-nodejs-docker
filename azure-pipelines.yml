@@ -24,3 +24,22 @@ steps:
     repository: 'willlianromao-k8s-demo/node-angular'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    tags: $(Build.BuildId)
+- task: replacetokens@4
+  inputs:
+    targetFiles: '**/*.yml'
+    encoding: 'auto'
+    tokenPattern: 'azpipelines'
+    writeBOM: true
+    actionOnMissing: 'warn'
+    keepToken: false
+    actionOnNoFiles: 'continue'
+    enableTransforms: false
+    useLegacyPattern: false
+    enableTelemetry: true
+- task: KubernetesManifest@0
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'DigitalOcean-K8s'
+    namespace: 'default'
+    manifests: 'deploy.yml'
