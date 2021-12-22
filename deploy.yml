@@ -31,12 +31,6 @@ spec:
           requests:
             cpu: "200m"
             memory: "200Mi"
-        env:
-         - name: DB_HOST					# environment variable name
-           valueFrom:
-            configMapKeyRef:
-              name: cm-db-host          # The ConfigMap Name.
-              key: homolog				# The key to fetch.
 status: {}
 ---
 apiVersion: autoscaling/v1
